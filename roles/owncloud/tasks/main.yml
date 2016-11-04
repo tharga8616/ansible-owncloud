@@ -1,0 +1,27 @@
+---
+ - name: Crear directorio /var/www/owncloud
+   file:
+     path: /var/www
+     state: directory
+     owner: www-data
+     mode: 0755 
+
+ - name: Descargar owncloud-9.1.1.tar.bz2
+   get_url:
+     url: "https://download.owncloud.org/community/owncloud-9.1.1.tar.bz2"
+     dest: "/tmp/owncloud-9.1.1.tar.bz2"
+
+ - name: Descomprimir owncloud-9.1.1.tar.bz2 en /var/www/owncloud
+   unarchive:
+     src: /tmp/owncloud-9.1.1.tar.bz2
+     dest: /var/www/
+     copy: no
+    
+ - name: Copiar script de permisos por defecto
+   copy: src=/root/owncloud/roles/owncloud/files/perm.sh dest=/tmp owner=root group=root mode="u=rwx,g=r,o=r"
+
+
+ - name: Ejecutar script de permisos por defecto
+   command: /tmp/./perm.sh
+   
+   

@@ -1,0 +1,23 @@
+---
+ - name: Instalar MySQL
+   apt: name=mysql-server  state=present
+
+ - name: Arrancar MySQL
+   service: name=mysql state=started
+
+ - name: Módulo python mysqldb
+   apt: name=python-mysqldb state=present
+
+ - name: Borrar base de datos de prueba
+   mysql_db: db=test state=absent
+
+ - name: Crear una base de datos para Owncloud
+   mysql_db: "db={{ domain }} state=present"
+
+ - name: Crear un usuario MySQL para Owncloud
+   mysql_user:
+     name: "{{ domain }}"
+     password: "1234"
+     priv: "{{ domain }}.*:ALL"
+     host: localhost
+     state: present

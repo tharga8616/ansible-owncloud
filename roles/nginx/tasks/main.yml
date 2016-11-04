@@ -1,0 +1,66 @@
+---
+ - name: Instalar Nginx y dependencias php5
+   apt: name={{ item }} state=present
+   with_items:
+     - nginx
+     - php5
+     - php5-fpm
+     - php5-curl
+     - php5-gd
+     - php5-cli
+     - php5-cgi
+     - php5-mcrypt
+     - php5-mysql
+     - php5-sqlite
+     - php5-common
+     - php-apc
+     - openssl
+     - ssl-cert
+     - sqlite3
+     - php-pear
+     - php-apc
+     - libapr1
+     - libtool
+     - curl
+     - libcurl4-openssl-dev
+     - php-xml-parser
+     - php5-dev
+     - php5-memcache
+     - memcached
+     - varnish
+
+
+ - name: Copiar archivo de configuración de php5
+   copy: src=/root/owncloud/roles/nginx/files/php.ini dest=/etc/php5/fpm/php.ini
+#   notify: restart php5-fpm
+
+ - name: Eliminar archivos de configuración por defecto
+#   file: path="/etc/nginx/{{ item }}" state=absent
+   file: path="{{ item }}" state=absent
+   with_items:
+     - /etc/nginx/sites-enabled/default
+     - /etc/nginx/sites-available/default
+     - /var/www/html
+  
+
+ - name: Copiar archivo de configuración de nginx
+   copy: src=/root/owncloud/roles/nginx/files/nginx.conf dest=/etc/nginx/nginx.conf
+   notify: restart nginx
+
+ - name: Copiar archivo de configuración del VirtualHost 
+   copy: src=/root/owncloud/roles/nginx/files/owncloud dest=/etc/nginx/sites-available
+   notify: restart nginx
+
+ - name: Crear simlink en sites-enabled
+   file: src=/etc/nginx/sites-available/owncloud dest=/etc/nginx/sites-enabled/owncloud state=link
+   notify: restart nginx
+   
+ - name: Copiar certificados de seguridad
+   copy: src=/root/owncloud/roles/nginx/files/{{ item }} dest=/etc/nginx/{{ item }}
+   with_items:
+     - cert.pem
+     - cert.key
+   notify: restart nginx
+
+ - name: Configurar el fichero hosts
+   lineinfile: dest=/etc/hosts line="192.168.66.6    owncloud.qindel.com     owncloud"

@@ -1,0 +1,6 @@
+---
+  owncloud_version: "9.1"
+  owncloud_path: "/var/www/owncloud"
+  owncloud_site_name: "Owncloud Server by Tharga8616"
+  domain: "owncloud"
+  max_filesize: "1000M"
