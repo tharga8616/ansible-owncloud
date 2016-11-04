@@ -1,0 +1,30 @@
+---
+- hosts: owncloud
+  become: yes
+
+#  vars_files:
+#    - vars/main.yml
+
+  roles:
+    - nginx
+    - mysql
+    - owncloud
+
+
+#  tasks:
+#    - name: Configuración de alta seguridad de ssh
+#      lineinfile:
+#        dest: /etc/ssh/sshd_config
+#        regexp: "{{ item.regexp }}"
+#        line: "{{ item.line }}"
+#        state: present
+#      with_items:
+#        - regexp: "^PasswordAuthentication"
+#          line: "PasswordAuthentication yes"
+#        - regexp: "^PermitRootLogin"
+#          line: "PermitRootLogin yes"
+#        - regexp: "^Port"
+#          line: "Port 22"
+#      notify: restart ssh
+
+
